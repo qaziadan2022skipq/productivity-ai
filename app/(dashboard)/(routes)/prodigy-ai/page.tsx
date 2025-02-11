@@ -31,118 +31,25 @@ import { Loader } from "@/components/loader";
 import { Empty } from "@/components/empty";
 import { useToast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
-import { Checkbox } from "@/components/ui/checkbox";
-
-interface UserQuestionnaire {
-  id: string;
-  userId: string;
-  fullName: string;
-  emailAddress: string;
-  phoneNumber: string;
-  branchOfService: string;
-  serviceDateStarted: string;
-  serviceDateEnded: string;
-  rankAtDischarge: string;
-  typeOfDischarge: string;
-  hazardousOption: string;
-  hazardousYesDeatils: string;
-  serviceConnectedDisability: string;
-  serviceConnectedDisabilityYesDeatils: string;
-  disabilities: string;
-  newDisabilitiesOrWorseningConditions: string;
-  newDisabilitiesOrWorseningConditionsYesDeatils: string;
-  sustainedInjuries: string;
-  sustainedInjuriesYesDeatils: string;
-  medicalTreatmentOfInjuries: string;
-  medicalTreatmentOfInjuriesYesDeatils: string;
-  conditionsAffectedAbilityOfWork: string;
-  conditionsAffectedAbilityOfWorkYesDeatils: string;
-  filedDisabilityClaimWithVA: string;
-  filedDisabilityClaimWithVAYesDeatils: string;
-  currentlyEmployed: string;
-  currentlyEmployedYesDeatils: string;
-  dependents: string;
-  dependentsYesDeatils: string;
-  additionalInfoOfDisabilityClaim: string;
-  approvalForAI: string;
-}
 
 const ClaimOptimizationReport = () => {
   const router = useRouter();
-  // const [questionnaire, setQuestionnaire] = useState<UserQuestionnaire>();
   const [result, setResult] = useState<string>("");
+  const [role, setRole] = useState<any>([]);
   const printRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    // create new thread
-    localStorage.setItem("claimOptimizationBotThreadId", "");
-    createThread();
-    getQuestionnaire();
-  }, []);
-
-  const createThread = async () => {
-    const response = await axios.post("/api/create-thread");
-    localStorage.setItem("claimOptimizationBotThreadId", response.data);
-  };
-
-  const getQuestionnaire = async () => {
-    const response = await axios.get("/api/get-questionnaire");
-    console.log(response.data);
-    // setQuestionnaire(response.data);
-  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
-      emailAddress: "",
-      phoneNumber: "",
-      currentlyHomeless: "No",
-      riskOfBecomingHomeless: "No",
-      branchOfService: "",
-      serviceDateStarted: "",
-      serviceDateEnded: "",
-      rankAtDischarge: "",
-      typeOfDischarge: "",
-      hazardousOption: "",
-      hazardousYesDeatils: "Nil",
-      serviceConnectedDisability: "",
-      serviceConnectedDisabilityYesDeatils: "Nil",
-      claimingAnyConditionsRelatedToToxicExposures: "Yes",
-      serveUnderAnotherName: "No",
-      periodsOfServiceWithEnlistmentAndDischargeDates: "Jan 2025 to jan 2026",
-      currentlyActivatedOnFederalOrdersWithTheNationalGuardOrReserves: "No",
-      currentlyReceivingInactiveDutyTrainingPay: "No",
-      prisonerOfWar: "No",
-      receivingMilitaryRetiredPay: "No",
-      monthlyAmount: "0$",
-      disabilities: "",
-      newDisabilitiesOrWorseningConditions: "",
-      newDisabilitiesOrWorseningConditionsYesDeatils: "Nil",
-      sustainedInjuries: "",
-      sustainedInjuriesYesDeatils: "Nil",
-      medicalTreatmentOfInjuries: "",
-      medicalTreatmentOfInjuriesYesDeatils: "Nil",
-      conditionsAffectedAbilityOfWork: "",
-      conditionsAffectedAbilityOfWorkYesDeatils: "Nil",
-      filedDisabilityClaimWithVA: "",
-      filedDisabilityClaimWithVAYesDeatils: "Nil",
-      VAMedicalCentersOrMilitaryTreatmentFacilitiesVisitedForClaimedConditions:
-        [{ center: "", location: "" }],
-      currentlyEmployed: "",
-      currentlyEmployedYesDeatils: "Nil",
-      dependents: "",
-      dependentsYesDeatils: "Nil",
-      additionalInfoOfDisabilityClaim: "Nil",
-      approvalForAI: "",
-      diagnosedDiseasesList: [
-        "PTSD or other mental health disorders",
-        "Respiratory issues or lung diseases",
-      ],
-      otherDiseases: "Nil",
+      industry: "",
+      role: "",
+      startPrompt: "",
     },
   });
+
+  const selectedIndustry = form.watch("industry") || "";
+  // console.log(selectedIndustry);
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -227,7 +134,7 @@ const ClaimOptimizationReport = () => {
                 {/* Industry  */}
                 <FormField
                   control={form.control}
-                  name="branchOfService"
+                  name="industry"
                   render={({ field }) => (
                     <FormItem className="col-span-12 lg:col-span-4 rounded-lg">
                       <FormLabel className="text-sm text-gray-500">
@@ -257,7 +164,7 @@ const ClaimOptimizationReport = () => {
                 {/* Role  */}
                 <FormField
                   control={form.control}
-                  name="branchOfService"
+                  name="role"
                   render={({ field }) => (
                     <FormItem className="col-span-12 lg:col-span-4 rounded-lg">
                       <FormLabel className="text-sm text-gray-500">
@@ -273,11 +180,15 @@ const ClaimOptimizationReport = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {roles.map((bos) => (
-                            <SelectItem key={bos.value} value={bos.value}>
-                              {bos.label}
-                            </SelectItem>
-                          ))}
+                          {roles.map(
+                            (role) =>
+                              role.name === selectedIndustry &&
+                              role.value.map((bos) => (
+                                <SelectItem key={bos.value} value={bos.value}>
+                                  {bos.label}
+                                </SelectItem>
+                              ))
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -287,7 +198,7 @@ const ClaimOptimizationReport = () => {
                 {/* select prompt  */}
                 <FormField
                   control={form.control}
-                  name="branchOfService"
+                  name="startPrompt"
                   render={({ field }) => (
                     <FormItem className="col-span-12 lg:col-span-4 rounded-lg">
                       <FormLabel className="text-sm text-gray-500">
@@ -314,8 +225,8 @@ const ClaimOptimizationReport = () => {
                     </FormItem>
                   )}
                 />
-                 {/* Message */}
-                 <FormField
+                {/* Message */}
+                <FormField
                   control={form.control}
                   name="fullName"
                   render={({ field }) => (
@@ -333,7 +244,6 @@ const ClaimOptimizationReport = () => {
                     </FormItem>
                   )}
                 />
-
               </div>
 
               <Button
