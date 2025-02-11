@@ -17,7 +17,7 @@ export const Loader = () => {
             fill="currentFill"
           />
         </svg>
-        <span className="font-bold text-[#CC302F]">Creating Summary</span>
+        <span className="font-bold text-[#CC302F]">ProdigyAI is creating response</span>
       </div>
     );
   };

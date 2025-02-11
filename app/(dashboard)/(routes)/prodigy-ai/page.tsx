@@ -35,7 +35,6 @@ import ReactMarkdown from "react-markdown";
 const ClaimOptimizationReport = () => {
   const router = useRouter();
   const [result, setResult] = useState<string>("");
-  const [role, setRole] = useState<any>([]);
   const printRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -45,6 +44,7 @@ const ClaimOptimizationReport = () => {
       industry: "",
       role: "",
       startPrompt: "",
+      message: ""
     },
   });
 
@@ -53,33 +53,23 @@ const ClaimOptimizationReport = () => {
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setResult("");
       console.log(values);
-      const response = await axios.post("/api/save-user-questionnaire", values);
+      const response = await axios.post("/api/prodigy-ai-response", values)
+      console.log(response.data)
+      setResult(response.data)
       toast({
         variant: "default",
         title: "Success",
         description: "Form successfully saved into the database.",
       });
-      setResult(response.data);
+      
       toast({
         variant: "default",
         title: "Success",
         description:
-          "Thank you for completing the questionnaire. We will review your information and get back to you with the next steps.",
+          "Response generated",
       });
-      const botAnswer = await axios.post("/api/claim-optimization-bot", {
-        userMessage: JSON.stringify(values),
-        threadId: localStorage.getItem("claimOptimizationBotThreadId"),
-      });
-      console.log(botAnswer.data);
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Report successfully generated.",
-      });
-      setResult(botAnswer.data.text.value);
-      form.reset();
+      // form.reset();
     } catch (error) {
       // todo: Open Pro Modal
       console.error(error);
@@ -228,7 +218,7 @@ const ClaimOptimizationReport = () => {
                 {/* Message */}
                 <FormField
                   control={form.control}
-                  name="fullName"
+                  name="message"
                   render={({ field }) => (
                     <FormItem className="col-span-12 lg:col-span-12 rounded-lg">
                       <FormLabel className="text-sm text-gray-500">
@@ -264,7 +254,7 @@ const ClaimOptimizationReport = () => {
             </div>
           )}
           {result.length === 0 && !isLoading && (
-            <Empty label="No Report is Generated!" />
+            <Empty label="No Response Generated!" />
           )}
           {result.length > 0 && (
             <div>
