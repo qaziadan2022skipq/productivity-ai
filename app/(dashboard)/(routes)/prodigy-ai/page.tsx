@@ -242,7 +242,7 @@ const ClaimOptimizationReport = () => {
                 disabled={isLoading}
                 size="icon"
               >
-                Generate
+                {result.length > 0 ? "Regenerate" : "Generate"}
               </Button>
             </form>
           </Form>
@@ -257,13 +257,16 @@ const ClaimOptimizationReport = () => {
             <Empty label="No Response Generated!" />
           )}
           {result.length > 0 && (
-            <div>
+            <div className="flex flex-col items-center">
               <div ref={printRef}>
                 <ReactMarkdown>{result}</ReactMarkdown>
               </div>
-              <Button className="bg-[#CC302F] mt-4" onClick={handlePrint}>
+              <div className="flex items-center gap-x-4 mb-4">
+              <Button className="bg-[#002D62] mt-4" onClick={handlePrint}>
                 Download PDF
               </Button>
+              
+              </div>
             </div>
           )}
         </div>
