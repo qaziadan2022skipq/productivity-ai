@@ -31,6 +31,7 @@ import { Loader } from "@/components/loader";
 import { Empty } from "@/components/empty";
 import { useToast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
+import { Textarea } from "@/components/ui/textarea";
 
 const ClaimOptimizationReport = () => {
   const router = useRouter();
@@ -225,7 +226,7 @@ const ClaimOptimizationReport = () => {
                         Message
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Please type here" {...field} />
+                        <Textarea rows={8} placeholder="Please type here" {...field} />
                       </FormControl>
                       {/* <FormDescription>
                       This is your public display name.
