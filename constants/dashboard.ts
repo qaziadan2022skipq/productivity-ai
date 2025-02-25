@@ -1,4 +1,4 @@
-import { MenuSquareIcon, PenBoxIcon } from "lucide-react";
+import { MenuSquareIcon, Paperclip, PenBoxIcon } from "lucide-react";
 
 export const sidebarRoutes = [
   {
@@ -11,6 +11,12 @@ export const sidebarRoutes = [
     label: "ProdigyAI",
     icon: PenBoxIcon,
     href: "/prodigy-ai",
+    color: "text-[#CC302F]",
+  },
+  {
+    label: "Glossary",
+    icon: Paperclip,
+    href: "/glossary",
     color: "text-[#CC302F]",
   },
   

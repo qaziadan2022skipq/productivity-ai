@@ -192,7 +192,7 @@ const ClaimOptimizationReport = () => {
                   render={({ field }) => (
                     <FormItem className="col-span-12 lg:col-span-4 rounded-lg">
                       <FormLabel className="text-sm text-gray-500">
-                        Select a start prompt:
+                      Choose your task:
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}

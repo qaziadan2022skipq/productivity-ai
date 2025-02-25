@@ -28,6 +28,7 @@ export const industries = [
   { value: "travelHospitality", label: "Travel & Hospitality" },
   { value: "agricultureFood", label: "Agriculture & Food Production" },
   { value: "automotiveTransportation", label: "Automotive & Transportation" },
+  { value: "others", label: "Others" },
 ];
 
 export const roles = [
@@ -193,6 +194,16 @@ export const roles = [
       { value: "dealershipManagement", label: "Dealership Management" },
     ],
   },
+  {
+    name: "others",
+    value: [
+      {
+        value: "other",
+        label: "others",
+      },
+      
+    ],
+  },
 ];
 
 export const startPrompt = [
@@ -200,4 +211,5 @@ export const startPrompt = [
   { value: "generate a report", label: "Generate a report" },
   { value: "provide business insights", label: "Provide business insights" },
   { value: "automate a task", label: "Automate a task" },
+  { value: "other", label: "Other" },
 ];
