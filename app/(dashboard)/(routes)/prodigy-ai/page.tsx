@@ -226,7 +226,7 @@ const ClaimOptimizationReport = () => {
                         Message
                       </FormLabel>
                       <FormControl>
-                        <Textarea rows={8} placeholder="Please type here" {...field} />
+                        <Textarea rows={8} placeholder="How can I help you today" {...field} />
                       </FormControl>
                       {/* <FormDescription>
                       This is your public display name.
